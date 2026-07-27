@@ -13,11 +13,19 @@ table 52302 "ERF SFTT Setup"
         field(2; "Journal Template Name"; Code[10])
         {
             Caption = 'Journal Template Name';
+            TableRelation = "Item Journal Template";
             DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                if "Journal Template Name" <> xRec."Journal Template Name" then
+                    Validate("Journal Batch Name", '');
+            end;
         }
         field(3; "Journal Batch Name"; Code[10])
         {
             Caption = 'Journal Batch Name';
+            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = field("Journal Template Name"));
             DataClassification = CustomerContent;
         }
     }

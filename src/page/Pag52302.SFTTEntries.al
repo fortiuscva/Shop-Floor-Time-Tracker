@@ -4,7 +4,10 @@ page 52302 "ERF SFTT Entries"
     Caption = 'SFTT Entries';
     PageType = List;
     SourceTable = "ERF SFTT Entry";
-    UsageCategory = Lists;
+    SourceTableView = sorting("Entry No.")
+                      order(descending);
+
+    UsageCategory = History;
 
     layout
     {
