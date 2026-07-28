@@ -38,6 +38,8 @@ codeunit 52301 "ERF Functions"
         ItemJnlLine.Validate("Routing Reference No.", SFTTEntry."Line No.");
         ItemJnlLine.Validate("Run Time", SFTTEntry."Duration in Minutes");
         ItemJnlLine.Validate("Output Quantity", SFTTEntry."Output Quantity");
+        ItemJnlLine.Validate("Item No.", GetRPOItemNo(SFTTEntry));
+        ItemJnlLine.Validate("Cap. Unit of Measure Code", 'MINUTES');
         ItemJnlLine.Modify(true);
         SFTTEntry.Validate(Status, 'Processed');
         SFTTEntry.Modify(true);
