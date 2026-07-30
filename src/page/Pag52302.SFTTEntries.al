@@ -36,6 +36,14 @@ page 52302 "ERF SFTT Entries"
                 {
                     ToolTip = 'Specifies the value of the Operation No. field.', Comment = '%';
                 }
+                field("Item Description"; Rec."Item Description")
+                {
+                    ToolTip = 'Specifies the value of the Routing Header Item Description field.', Comment = '%';
+                }
+                field("Operation Description"; Rec."Operation Description")
+                {
+                    ToolTip = 'Specifies the value of the Routing Line Operation Description field.', Comment = '%';
+                }
                 field("Start Time"; Rec."Start Time")
                 {
                     ToolTip = 'Specifies the value of the Start Time field.', Comment = '%';
