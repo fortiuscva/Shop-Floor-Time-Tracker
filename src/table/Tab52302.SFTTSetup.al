@@ -1,6 +1,6 @@
 table 52302 "ERF SFTT Setup"
 {
-    Caption = 'Shopfloor Time Tracking Setup';
+    Caption = 'Shop Floor Time Tracking Setup';
     DataClassification = ToBeClassified;
 
     fields

@@ -1,7 +1,7 @@
 page 52302 "ERF SFTT Entries"
 {
     ApplicationArea = All;
-    Caption = 'SFTT Entries';
+    Caption = 'Shop Floor Time Tracking Entries';
     PageType = List;
     SourceTable = "ERF SFTT Entry";
     SourceTableView = sorting("Entry No.")
@@ -70,27 +70,8 @@ page 52302 "ERF SFTT Entries"
                 }
                 field("Entry No."; Rec."Entry No.")
                 {
+                    Visible = false;
                     ToolTip = 'Specifies the value of the ID field.', Comment = '%';
-                }
-                field(SystemCreatedAt; Rec.SystemCreatedAt)
-                {
-                    ToolTip = 'Specifies the value of the SystemCreatedAt field.', Comment = '%';
-                }
-                field(SystemCreatedBy; Rec.SystemCreatedBy)
-                {
-                    ToolTip = 'Specifies the value of the SystemCreatedBy field.', Comment = '%';
-                }
-                field(SystemId; Rec.SystemId)
-                {
-                    ToolTip = 'Specifies the value of the SystemId field.', Comment = '%';
-                }
-                field(SystemModifiedAt; Rec.SystemModifiedAt)
-                {
-                    ToolTip = 'Specifies the value of the SystemModifiedAt field.', Comment = '%';
-                }
-                field(SystemModifiedBy; Rec.SystemModifiedBy)
-                {
-                    ToolTip = 'Specifies the value of the SystemModifiedBy field.', Comment = '%';
                 }
             }
         }

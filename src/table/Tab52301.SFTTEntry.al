@@ -1,6 +1,6 @@
 table 52301 "ERF SFTT Entry"
 {
-    Caption = 'SFTT Entry';
+    Caption = 'Shop Floor Time Tracking Entry';
     LookupPageId = "ERF SFTT Entries";
     DrillDownPageId = "ERF SFTT Entries";
     DataClassification = CustomerContent;
@@ -15,7 +15,7 @@ table 52301 "ERF SFTT Entry"
         field(2; "Prod Order No."; Code[20])
         {
             Caption = 'Production Order No.';
-            TableRelation = "Production Order" where(Status = const(Released));
+            TableRelation = "Production Order"."No." where(Status = const(Released));
             DataClassification = CustomerContent;
         }
         field(3; "Line No."; Integer)
@@ -53,8 +53,19 @@ table 52301 "ERF SFTT Entry"
             Caption = 'Employee No.';
             TableRelation = Employee;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                Employee: Record Employee;
+            begin
+                if ((Rec."Employee No." <> xRec."Employee No.") and (Rec."Employee No." <> '')) then begin
+                    Employee.Reset();
+                    if Employee.Get("Employee No.") then
+                        Rec.Validate("Employee Name", Employee."Search Name");
+                end else
+                    Rec.Validate("Employee Name", '');
+            end;
         }
-        field(10; "Employee Name"; Text[50])
+        field(10; "Employee Name"; Code[250])
         {
             Caption = 'Employee Name';
             DataClassification = CustomerContent;
@@ -65,14 +76,14 @@ table 52301 "ERF SFTT Entry"
             DecimalPlaces = 0 : 2;
             DataClassification = CustomerContent;
         }
-        field(12; "Serial No."; Code[50])
+        field(12; "Serial No."; Code[250])
         {
             Caption = 'Serial No.';
             DataClassification = CustomerContent;
         }
         field(13; "Item Description"; Text[100])
         {
-            Caption = 'Routing Header Item Description';
+            Caption = 'RPO Header Item Description';
             DataClassification = CustomerContent;
         }
         field(14; "Operation Description"; Text[100])
@@ -90,7 +101,7 @@ table 52301 "ERF SFTT Entry"
     }
     trigger OnInsert()
     var
-        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrder: Record "Production Order";
         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
         SFTTValidation: Codeunit "ERF SFTT Validations";
         Functions: Codeunit "ERF Functions";
@@ -98,9 +109,9 @@ table 52301 "ERF SFTT Entry"
     begin
         SFTTValidation.ValidateStartOperation(Rec);
 
-        ProdOrderLine.Reset();
-        if ProdOrderLine.Get(ProdOrderLine.Status::Released, "Prod Order No.", "Line No.") then
-            "Item Description" := ProdOrderLine.Description;
+        ProdOrder.Reset();
+        if ProdOrder.Get(ProdOrder.Status::Released, "Prod Order No.") then
+            "Item Description" := ProdOrder.Description;
 
         RoutingNo := Functions.GetRoutingNo("Prod Order No.", "Line No.", "Operation No.");
 
