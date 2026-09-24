@@ -64,6 +64,10 @@ page 52302 "ERF SFTT Entries"
                 {
                     ToolTip = 'Specifies the value of the Duration in Minutes field.', Comment = '%';
                 }
+                field("Time Duration"; Rec."Time Duration")
+                {
+                    ToolTip = 'Specifies the value of the Duration field.', Comment = '%';
+                }
                 field(Status; Rec.Status)
                 {
                     ToolTip = 'Specifies the value of the Status field.', Comment = '%';
