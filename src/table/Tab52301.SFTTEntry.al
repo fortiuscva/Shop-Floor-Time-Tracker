@@ -32,11 +32,25 @@ table 52301 "ERF SFTT Entry"
         {
             Caption = 'Start Time';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if ("Start Time" <> xRec."Start Time") and ("Start Time" <> 0DT) and ("End Time" <> 0DT) then
+                    Functions.CalculateDurationinMinutes(Rec)
+                else
+                    "Duration in Minutes" := 0;
+            end;
         }
         field(6; "End Time"; DateTime)
         {
             Caption = 'End Time';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if ("End Time" <> xRec."End Time") and ("End Time" <> 0DT) and ("Start Time" <> 0DT) then
+                    Functions.CalculateDurationinMinutes(Rec)
+                else
+                    "Duration in Minutes" := 0;
+            end;
         }
         field(7; "Duration in Minutes"; Integer)
         {
@@ -91,6 +105,16 @@ table 52301 "ERF SFTT Entry"
             Caption = 'Routing Line Operation Description';
             DataClassification = CustomerContent;
         }
+        field(15; "Time Duration"; Text[250])
+        {
+            Caption = 'Duration';
+            DataClassification = CustomerContent;
+        }
+        field(16; "User ID"; Text[80])
+        {
+            Caption = 'User ID';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
@@ -99,15 +123,22 @@ table 52301 "ERF SFTT Entry"
             Clustered = true;
         }
     }
+    var
+        Functions: Codeunit "ERF Functions";
+
     trigger OnInsert()
     var
         ProdOrder: Record "Production Order";
         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+        UserIDMapping: Record "ERF User ID Mapping";
         SFTTValidation: Codeunit "ERF SFTT Validations";
         Functions: Codeunit "ERF Functions";
         RoutingNo: Code[20];
     begin
-        SFTTValidation.ValidateStartOperation(Rec);
+        UserIDMapping.Reset();
+        UserIDMapping.Get("User ID");
+        "Employee No." := UserIDMapping."Employee No.";
+        "Employee Name" := UserIDMapping."Employee Name";
 
         ProdOrder.Reset();
         if ProdOrder.Get(ProdOrder.Status::Released, "Prod Order No.") then
@@ -119,4 +150,15 @@ table 52301 "ERF SFTT Entry"
         if ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, "Prod Order No.", "Line No.", RoutingNo, "Operation No.") then
             "Operation Description" := ProdOrderRoutingLine.Description;
     end;
+
+    trigger OnModify()
+    begin
+        if ("Start Time" <> 0DT) and ("End Time" <> 0DT) then begin
+            TimeDurationGbl := "End Time" - "Start Time";
+            Validate("Time Duration", Format(TimeDurationGbl));
+        end;
+    end;
+
+    var
+        TimeDurationGbl: Duration;
 }

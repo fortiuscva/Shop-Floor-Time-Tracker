@@ -80,7 +80,15 @@ codeunit 52301 "ERF Functions"
             exit(ProdOrderRoutingLine."Routing No.");
     end;
 
+    procedure CalculateDurationinMinutes(var SFTTEntry: Record "ERF SFTT Entry")
+    begin
+        TimeDuration := SFTTEntry."End Time" - SFTTEntry."Start Time";
+        SFTTEntry."Time Duration" := Format(TimeDuration);
+        SFTTEntry."Duration in Minutes" := Round((SFTTEntry."End Time" - SFTTEntry."Start Time") / 60000, 1, '=');
+    end;
+
     var
         SFTTSetup: Record "ERF SFTT Setup";
         ItemJnlLine: Record "Item Journal Line";
+        TimeDuration: Duration;
 }
