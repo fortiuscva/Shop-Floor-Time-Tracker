@@ -20,13 +20,9 @@ page 52301 "ERF SFTT Entry API"
                 {
                     Caption = 'Id';
                 }
-                field(employeeNo; Rec."Employee No.")
+                field("userID"; Rec."User ID")
                 {
-                    Caption = 'Employee No.';
-                }
-                field(employeeName; Rec."Employee Name")
-                {
-                    Caption = 'Employee Name';
+                    Caption = 'User ID';
                 }
                 field(prodOrderNo; Rec."Prod Order No.")
                 {

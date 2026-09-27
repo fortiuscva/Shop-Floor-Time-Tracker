@@ -105,9 +105,14 @@ table 52301 "ERF SFTT Entry"
             Caption = 'Routing Line Operation Description';
             DataClassification = CustomerContent;
         }
-        field(15; "Time Duration"; Text[100])
+        field(15; "Time Duration"; Text[250])
         {
             Caption = 'Duration';
+            DataClassification = CustomerContent;
+        }
+        field(16; "User ID"; Text[80])
+        {
+            Caption = 'User ID';
             DataClassification = CustomerContent;
         }
     }
@@ -125,11 +130,15 @@ table 52301 "ERF SFTT Entry"
     var
         ProdOrder: Record "Production Order";
         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+        UserIDMapping: Record "ERF User ID Mapping";
         SFTTValidation: Codeunit "ERF SFTT Validations";
         Functions: Codeunit "ERF Functions";
         RoutingNo: Code[20];
     begin
-        SFTTValidation.ValidateStartOperation(Rec);
+        UserIDMapping.Reset();
+        UserIDMapping.Get("User ID");
+        "Employee No." := UserIDMapping."Employee No.";
+        "Employee Name" := UserIDMapping."Employee Name";
 
         ProdOrder.Reset();
         if ProdOrder.Get(ProdOrder.Status::Released, "Prod Order No.") then
