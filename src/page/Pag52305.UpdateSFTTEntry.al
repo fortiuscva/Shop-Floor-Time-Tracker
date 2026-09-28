@@ -1,0 +1,62 @@
+page 52305 "ERF Update SFTT Entry"
+{
+    ApplicationArea = All;
+    Caption = 'Update Shop Floor Time Tracking Entry';
+    PageType = StandardDialog;
+
+    layout
+    {
+        area(Content)
+        {
+            field("Start Time"; StartTime)
+            {
+                ApplicationArea = all;
+                Caption = 'Start Time';
+            }
+            field("End Time"; EndTime)
+            {
+                ApplicationArea = all;
+                Caption = 'End Time';
+            }
+            field("Output Quantity"; OutputQty)
+            {
+                ApplicationArea = all;
+                Caption = 'Output Quantity';
+            }
+        }
+    }
+    var
+        StartTime: DateTime;
+        EndTime: DateTime;
+        OutputQty: Decimal;
+
+    procedure SetStartTime(StartTimePar: DateTime)
+    begin
+        StartTime := StartTimePar;
+    end;
+
+    procedure SetEndTime(EndTimePar: DateTime)
+    begin
+        EndTime := EndTimePar;
+    end;
+
+    procedure SetOutputQty(OutputQtyPar: Decimal)
+    begin
+        OutputQty := OutputQtyPar;
+    end;
+
+    procedure GetStartTime(): DateTime
+    begin
+        exit(StartTime);
+    end;
+
+    procedure GetEndTime(): DateTime
+    begin
+        exit(EndTime);
+    end;
+
+    procedure GetOutputQty(): Decimal
+    begin
+        exit(OutputQty);
+    end;
+}
