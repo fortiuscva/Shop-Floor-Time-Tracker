@@ -8,6 +8,10 @@ page 52302 "ERF SFTT Entries"
                       order(descending);
 
     UsageCategory = History;
+    Editable = false;
+    InsertAllowed = false;
+    DeleteAllowed = false;
+    ModifyAllowed = false;
 
     layout
     {
@@ -112,6 +116,37 @@ page 52302 "ERF SFTT Entries"
                     Visible = false;
                     ToolTip = 'Specifies the value of the ID field.', Comment = '%';
                 }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action(UpdateEntry)
+            {
+                ApplicationArea = all;
+                Caption = 'Update Entry';
+                Ellipsis = true;
+                Image = EditLines;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    UpdateSFTTEntry: Page "ERF Update SFTT Entry";
+                begin
+                    UpdateSFTTEntry.SetStartTime(Rec."Start Time");
+                    UpdateSFTTEntry.SetEndTime(Rec."End Time");
+                    UpdateSFTTEntry.SetOutputQty(Rec."Output Quantity");
+
+                    if UpdateSFTTEntry.RunModal() = Action::OK then begin
+                        Rec.Validate("Start Time", UpdateSFTTEntry.GetStartTime());
+                        Rec.Validate("End Time", UpdateSFTTEntry.GetEndTime());
+                        Rec.Validate("Output Quantity", UpdateSFTTEntry.GetOutputQty());
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end
+                end;
             }
         }
     }

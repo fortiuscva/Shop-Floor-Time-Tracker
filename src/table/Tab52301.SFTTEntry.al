@@ -32,25 +32,25 @@ table 52301 "ERF SFTT Entry"
         {
             Caption = 'Start Time';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                if ("Start Time" <> xRec."Start Time") and ("Start Time" <> 0DT) and ("End Time" <> 0DT) then
-                    Functions.CalculateDurationinMinutes(Rec)
-                else
-                    "Duration in Minutes" := 0;
-            end;
+            // trigger OnValidate()
+            // begin
+            //     if ("Start Time" <> xRec."Start Time") and ("Start Time" <> 0DT) and ("End Time" <> 0DT) then
+            //         Functions.CalculateDurationinMinutes(Rec)
+            //     else
+            //         "Duration in Minutes" := 0;
+            // end;
         }
         field(6; "End Time"; DateTime)
         {
             Caption = 'End Time';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                if ("End Time" <> xRec."End Time") and ("End Time" <> 0DT) and ("Start Time" <> 0DT) then
-                    Functions.CalculateDurationinMinutes(Rec)
-                else
-                    "Duration in Minutes" := 0;
-            end;
+            // trigger OnValidate()
+            // begin
+            //     if ("End Time" <> xRec."End Time") and ("End Time" <> 0DT) and ("Start Time" <> 0DT) then
+            //         Functions.CalculateDurationinMinutes(Rec)
+            //     else
+            //         "Duration in Minutes" := 0;
+            // end;
         }
         field(7; "Duration in Minutes"; Integer)
         {
@@ -154,6 +154,7 @@ table 52301 "ERF SFTT Entry"
     trigger OnModify()
     begin
         if ("Start Time" <> 0DT) and ("End Time" <> 0DT) then begin
+            "Duration in Minutes" := Round(("End Time" - "Start Time") / 60000, 1, '=');
             TimeDurationGbl := "End Time" - "Start Time";
             Validate("Time Duration", Format(TimeDurationGbl));
         end;
