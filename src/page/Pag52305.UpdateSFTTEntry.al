@@ -23,12 +23,19 @@ page 52305 "ERF Update SFTT Entry"
                 ApplicationArea = all;
                 Caption = 'Output Quantity';
             }
+            field("Serial No."; SerialNo)
+            {
+                ApplicationArea = All;
+                Caption = 'Serial No.';
+
+            }
         }
     }
     var
         StartTime: DateTime;
         EndTime: DateTime;
         OutputQty: Decimal;
+        SerialNo: Code[250];
 
     procedure SetStartTime(StartTimePar: DateTime)
     begin
@@ -45,6 +52,11 @@ page 52305 "ERF Update SFTT Entry"
         OutputQty := OutputQtyPar;
     end;
 
+    procedure SetSerialNo(SerialNoPar: Code[250])
+    begin
+        SerialNo := SerialNoPar;
+    end;
+
     procedure GetStartTime(): DateTime
     begin
         exit(StartTime);
@@ -58,5 +70,10 @@ page 52305 "ERF Update SFTT Entry"
     procedure GetOutputQty(): Decimal
     begin
         exit(OutputQty);
+    end;
+
+    procedure GetSerialNo(): Code[250]
+    begin
+        exit(SerialNo);
     end;
 }

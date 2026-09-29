@@ -138,16 +138,19 @@ page 52302 "ERF SFTT Entries"
                     UpdateSFTTEntry.SetStartTime(Rec."Start Time");
                     UpdateSFTTEntry.SetEndTime(Rec."End Time");
                     UpdateSFTTEntry.SetOutputQty(Rec."Output Quantity");
+                    UpdateSFTTEntry.SetSerialNo(Rec."Serial No.");
 
                     if UpdateSFTTEntry.RunModal() = Action::OK then begin
                         Rec.Validate("Start Time", UpdateSFTTEntry.GetStartTime());
                         Rec.Validate("End Time", UpdateSFTTEntry.GetEndTime());
                         Rec.Validate("Output Quantity", UpdateSFTTEntry.GetOutputQty());
+                        Rec.Validate("Serial No.", UpdateSFTTEntry.GetSerialNo());
                         Rec.Modify(true);
                         CurrPage.Update(false);
                     end
                 end;
             }
+
         }
     }
 }
