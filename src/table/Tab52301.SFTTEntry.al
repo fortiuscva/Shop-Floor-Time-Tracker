@@ -79,7 +79,7 @@ table 52301 "ERF SFTT Entry"
                     Rec.Validate("Employee Name", '');
             end;
         }
-        field(10; "Employee Name"; Code[250])
+        field(10; "Employee Name"; Text[250])
         {
             Caption = 'Employee Name';
             DataClassification = CustomerContent;
@@ -135,6 +135,8 @@ table 52301 "ERF SFTT Entry"
         Functions: Codeunit "ERF Functions";
         RoutingNo: Code[20];
     begin
+        SFTTValidation.ValidateStartOperation(Rec);
+
         UserIDMapping.Reset();
         UserIDMapping.Get("User ID");
         "Employee No." := UserIDMapping."Employee No.";
