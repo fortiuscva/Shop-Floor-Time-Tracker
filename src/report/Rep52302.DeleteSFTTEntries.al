@@ -2,6 +2,7 @@ report 52302 "ERF Delete SFTT Entries"
 {
     ApplicationArea = All;
     Caption = 'Delete SFTT Entries';
+    ProcessingOnly = true;
     UsageCategory = ReportsAndAnalysis;
     dataset
     {
