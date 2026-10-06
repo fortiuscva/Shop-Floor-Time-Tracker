@@ -8,10 +8,10 @@ page 52302 "ERF SFTT Entries"
                       order(descending);
 
     UsageCategory = History;
-    Editable = false;
+    // Editable = false;
     InsertAllowed = false;
-    DeleteAllowed = false;
-    ModifyAllowed = false;
+    // DeleteAllowed = false;
+    // ModifyAllowed = false;
 
     layout
     {
@@ -73,6 +73,7 @@ page 52302 "ERF SFTT Entries"
                 field("Start Time"; Rec."Start Time")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of the Start Time field.', Comment = '%';
                 }
                 field("Output Quantity"; Rec."Output Quantity")
@@ -90,6 +91,7 @@ page 52302 "ERF SFTT Entries"
                 field("End Time"; Rec."End Time")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of the End Time field.', Comment = '%';
                 }
                 field("Duration in Minutes"; Rec."Duration in Minutes")
@@ -113,7 +115,6 @@ page 52302 "ERF SFTT Entries"
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
-                    Visible = false;
                     ToolTip = 'Specifies the value of the ID field.', Comment = '%';
                 }
             }
