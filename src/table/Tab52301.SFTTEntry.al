@@ -164,4 +164,13 @@ table 52301 "ERF SFTT Entry"
 
     var
         TimeDurationGbl: Duration;
+
+    trigger OnDelete()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        If UserSetup.Get(UserId) then
+            if not UserSetup."Allow Deletion of SFTT Entries" then
+                Error('You do not have the necessary permission to delete this Shop Floor Time Tracking Entry');
+    end;
 }
