@@ -129,8 +129,6 @@ page 52302 "ERF SFTT Entries"
                 Caption = 'Update Entry';
                 Ellipsis = true;
                 Image = EditLines;
-                Promoted = true;
-                PromotedCategory = Process;
                 trigger OnAction()
                 var
                     UpdateSFTTEntry: Page "ERF Update SFTT Entry";
@@ -151,6 +149,73 @@ page 52302 "ERF SFTT Entries"
                 end;
             }
 
+        }
+        area(Navigation)
+        {
+            action(RPO)
+            {
+                ApplicationArea = All;
+                Caption = 'Released Production Order';
+                Ellipsis = true;
+                Image = Production;
+                trigger OnAction()
+                var
+                    ProductionOrder: Record "Production Order";
+                begin
+                    ProductionOrder.Reset();
+                    if ProductionOrder.Get(ProductionOrder.Status::Released, Rec."Prod Order No.") then
+                        Page.Run(Page::"Released Production Order", ProductionOrder);
+                end;
+            }
+            action(Employee)
+            {
+                ApplicationArea = All;
+                Caption = 'Employee';
+                Ellipsis = true;
+                Image = Employee;
+                trigger OnAction()
+                var
+                    Employee: Record Employee;
+                begin
+                    Employee.Reset();
+                    if Employee.Get(Rec."Employee No.") then
+                        Page.Run(Page::"Employee Card", Employee);
+                end;
+            }
+            action(ProdOrderRouting)
+            {
+                ApplicationArea = All;
+                Caption = 'Prod. Order Routing';
+                Ellipsis = true;
+                Image = Route;
+                trigger OnAction()
+                var
+                    ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+                begin
+                    ProdOrderRoutingLine.Reset();
+                    if ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, Rec."Prod Order No.", Rec."Line No.", 'STD', Rec."Operation No.") then
+                        Page.RunModal(Page::"Prod. Order Routing", ProdOrderRoutingLine);
+                end;
+            }
+        }
+        area(Promoted)
+        {
+            group(Category_Process)
+            {
+                actionref(UpdateEntry_Promoted; UpdateEntry)
+                {
+                }
+            }
+            // group(Category_Category4)
+            // {
+            //     Caption = 'Related';
+            //     actionref(Employee_Promoted; Employee)
+            //     {
+            //     }
+            //     actionref(RPO_Promoted; RPO)
+            //     {
+            //     }
+            // }
         }
     }
 }
