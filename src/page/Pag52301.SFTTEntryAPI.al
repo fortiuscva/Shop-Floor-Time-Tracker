@@ -60,6 +60,10 @@ page 52301 "ERF SFTT Entry API"
                 {
                     Caption = 'Status';
                 }
+                field(entryNo; Rec."Entry No.")
+                {
+                    Caption = 'Entry No.';
+                }
             }
         }
     }
