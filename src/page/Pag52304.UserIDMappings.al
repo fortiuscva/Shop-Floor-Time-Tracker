@@ -24,6 +24,14 @@ page 52304 "ERF User ID Mappings"
                 {
                     ToolTip = 'Specifies the value of the Employee Name field.', Comment = '%';
                 }
+                field("Used In"; Rec."Used In")
+                {
+                    ToolTip = 'Specifies the value of the Used In field.', Comment = '%';
+                }
+                field("Useful For"; Rec."Useful For")
+                {
+                    ToolTip = 'Specifies the value of the Useful For field.', Comment = '%';
+                }
             }
         }
     }

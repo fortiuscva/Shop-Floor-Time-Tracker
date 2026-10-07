@@ -119,6 +119,14 @@ page 52302 "ERF SFTT Entries"
                 }
             }
         }
+        area(FactBoxes)
+        {
+            systempart(Notes; Notes)
+            {
+                Caption = 'Notes';
+                ApplicationArea = Notes;
+            }
+        }
     }
     actions
     {
@@ -196,6 +204,22 @@ page 52302 "ERF SFTT Entries"
                     ProdOrderRoutingLine.Reset();
                     if ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, Rec."Prod Order No.", Rec."Line No.", 'STD', Rec."Operation No.") then
                         Page.RunModal(Page::"Prod. Order Routing", ProdOrderRoutingLine);
+                end;
+            }
+            action(EmployeeUserIDMapping)
+            {
+                ApplicationArea = All;
+                Caption = 'Employee User ID Mapping';
+                Ellipsis = true;
+                Image = Route;
+                trigger OnAction()
+                var
+                    EmployeeUserIDMapping: Record "ERF User ID Mapping";
+                begin
+                    EmployeeUserIDMapping.Reset();
+                    EmployeeUserIDMapping.SetRange("User ID", Rec."User ID");
+                    if EmployeeUserIDMapping.FindLast() then
+                        Page.RunModal(Page::"ERF User ID Mappings", EmployeeUserIDMapping);
                 end;
             }
         }
