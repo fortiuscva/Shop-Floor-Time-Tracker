@@ -31,6 +31,16 @@ table 52303 "ERF User ID Mapping"
             Caption = 'Employee Name';
             DataClassification = CustomerContent;
         }
+        field(4; "Used In"; Enum "ERF Used In")
+        {
+            Caption = 'Used In';
+            DataClassification = CustomerContent;
+        }
+        field(5; "Useful For"; Enum "ERF Useful For")
+        {
+            Caption = 'Useful For';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
