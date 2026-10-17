@@ -8,12 +8,13 @@ report 52301 "ERF Create Output Journals"
     {
         dataitem(SFTTEntry; "ERF SFTT Entry")
         {
-            DataItemTableView = sorting("Entry No.") where(Status = const('Completed'));
+            DataItemTableView = sorting("Entry No.") where(Status = const(Finished));
             trigger OnAfterGetRecord()
             var
-                Functions: Codeunit "ERF Functions";
+                Functions: Codeunit "ERF SFTT Functions";
             begin
-                Functions.CreateOutputJournal(SFTTEntry);
+                SFTTSetup.Get();
+                Functions.CreateOutputJournal(SFTTEntry, SFTTSetup);
             end;
         }
     }
@@ -32,4 +33,5 @@ report 52301 "ERF Create Output Journals"
 
     var
         Window: Dialog;
+        SFTTSetup: Record "ERF SFTT Setup";
 }

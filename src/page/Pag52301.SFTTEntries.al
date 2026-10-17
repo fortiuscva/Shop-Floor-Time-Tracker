@@ -1,17 +1,16 @@
-page 52302 "ERF SFTT Entries"
+page 52301 "ERF SFTT Entries"
 {
     ApplicationArea = All;
     Caption = 'Shop Floor Time Tracking Entries';
+    DeleteAllowed = false;
+    Editable = false;
+    InsertAllowed = false;
+    ModifyAllowed = false;
     PageType = List;
     SourceTable = "ERF SFTT Entry";
     SourceTableView = sorting("Entry No.")
                       order(descending);
-
-    UsageCategory = History;
-    // Editable = false;
-    InsertAllowed = false;
-    // DeleteAllowed = false;
-    // ModifyAllowed = false;
+    UsageCategory = Lists;
 
     layout
     {
@@ -19,13 +18,6 @@ page 52302 "ERF SFTT Entries"
         {
             repeater(General)
             {
-                field("User ID"; Rec."User ID")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies the value of the User ID field.', Comment = '%';
-                    Visible = false;
-                }
                 field("Employee No."; Rec."Employee No.")
                 {
                     ApplicationArea = All;
@@ -100,12 +92,6 @@ page 52302 "ERF SFTT Entries"
                     Editable = false;
                     ToolTip = 'Specifies the value of the Duration in Minutes field.', Comment = '%';
                 }
-                field("Time Duration"; Rec."Time Duration")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies the value of the Duration field.', Comment = '%';
-                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
@@ -116,6 +102,11 @@ page 52302 "ERF SFTT Entries"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the ID field.', Comment = '%';
+                }
+                field(Processed; Rec.Processed)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Processed field.', Comment = '%';
                 }
             }
         }
@@ -132,16 +123,64 @@ page 52302 "ERF SFTT Entries"
     {
         area(Processing)
         {
+            action(CreateOutputJournals)
+            {
+                ApplicationArea = All;
+                Caption = 'Create Output Journals';
+                Ellipsis = true;
+                Image = OutputJournal;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    SFTTSetup: Record "ERF SFTT Setup";
+                    SFTTFunctions: Codeunit "ERF SFTT Functions";
+                    CreateOutputJournalConfirmQst: Label 'Do you want to create an Output Journal for this Shop Floor Time Tracking Entry?';
+                    OutputJournalSuccessfullyCreatedLbl: Label 'The Output Journal was created successfully for this Shop Floor Time Tracking Entry.';
+                begin
+                    if Confirm(CreateOutputJournalConfirmQst, false) then begin
+                        Rec.TestField(Rec.Status, Rec.Status::Finished);
+                        SFTTSetup.Get();
+                        SFTTFunctions.CreateOutputJournal(Rec, SFTTSetup);
+                        Message(OutputJournalSuccessfullyCreatedLbl, Rec."Entry No.");
+                    end;
+                end;
+            }
+            action(DeleteEntry)
+            {
+                ApplicationArea = all;
+                Caption = 'Delete Entry';
+                Image = Delete;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    UserSetup: Record "User Setup";
+                begin
+                    Rec.TestField(Processed, false);
+                    Rec.TestField(Rec.Status, Rec.Status::Finished);
+                    Rec.Delete(true);
+                end;
+
+            }
             action(UpdateEntry)
             {
                 ApplicationArea = all;
                 Caption = 'Update Entry';
-                Ellipsis = true;
                 Image = EditLines;
+                Promoted = true;
+                PromotedCategory = Process;
                 trigger OnAction()
                 var
                     UpdateSFTTEntry: Page "ERF Update SFTT Entry";
+                    UserSetup: Record "User Setup";
                 begin
+                    Rec.TestField(Processed, false);
+                    Rec.TestField(Rec.Status, Rec.Status::Finished);
+                    If UserSetup.Get(UserId) then
+                        if not UserSetup."ERF Allow Update SFTT Entries" then
+                            Error('You do not have the necessary permissions to update this Shop Floor Time Tracking Entry');
+
                     UpdateSFTTEntry.SetStartTime(Rec."Start Time");
                     UpdateSFTTEntry.SetEndTime(Rec."End Time");
                     UpdateSFTTEntry.SetOutputQty(Rec."Output Quantity");
@@ -150,6 +189,7 @@ page 52302 "ERF SFTT Entries"
                     if UpdateSFTTEntry.RunModal() = Action::OK then begin
                         Rec.Validate("Start Time", UpdateSFTTEntry.GetStartTime());
                         Rec.Validate("End Time", UpdateSFTTEntry.GetEndTime());
+                        Rec.Validate("Duration in Minutes", Round((Rec."End Time" - Rec."Start Time") / 60000, 1, '='));
                         Rec.Validate("Output Quantity", UpdateSFTTEntry.GetOutputQty());
                         Rec.Validate("Serial No.", UpdateSFTTEntry.GetSerialNo());
                         Rec.Modify(true);
@@ -157,7 +197,6 @@ page 52302 "ERF SFTT Entries"
                     end
                 end;
             }
-
         }
         area(Navigation)
         {
@@ -200,10 +239,12 @@ page 52302 "ERF SFTT Entries"
                 trigger OnAction()
                 var
                     ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+                    RoutingNo: Code[20];
                 begin
+                    RoutingNo := Rec.GetRoutingNo(Rec."Prod Order No.", Rec."Line No.", Rec."Operation No.");
                     ProdOrderRoutingLine.Reset();
-                    if ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, Rec."Prod Order No.", Rec."Line No.", 'STD', Rec."Operation No.") then
-                        Page.RunModal(Page::"Prod. Order Routing", ProdOrderRoutingLine);
+                    if ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, Rec."Prod Order No.", Rec."Line No.", RoutingNo, Rec."Operation No.") then
+                        Page.Run(Page::"Prod. Order Routing Lines", ProdOrderRoutingLine);
                 end;
             }
             action(EmployeeUserIDMapping)
@@ -217,30 +258,11 @@ page 52302 "ERF SFTT Entries"
                     EmployeeUserIDMapping: Record "ERF User ID Mapping";
                 begin
                     EmployeeUserIDMapping.Reset();
-                    EmployeeUserIDMapping.SetRange("User ID", Rec."User ID");
+                    EmployeeUserIDMapping.SetRange("Employee No.", Rec."Employee No.");
                     if EmployeeUserIDMapping.FindLast() then
                         Page.RunModal(Page::"ERF User ID Mappings", EmployeeUserIDMapping);
                 end;
             }
-        }
-        area(Promoted)
-        {
-            group(Category_Process)
-            {
-                actionref(UpdateEntry_Promoted; UpdateEntry)
-                {
-                }
-            }
-            // group(Category_Category4)
-            // {
-            //     Caption = 'Related';
-            //     actionref(Employee_Promoted; Employee)
-            //     {
-            //     }
-            //     actionref(RPO_Promoted; RPO)
-            //     {
-            //     }
-            // }
         }
     }
 }

@@ -7,7 +7,7 @@ table 52303 "ERF User ID Mapping"
 
     fields
     {
-        field(1; "User ID"; Text[80])
+        field(1; "User ID"; Code[50])
         {
             Caption = 'User ID';
             DataClassification = CustomerContent;
@@ -29,16 +29,6 @@ table 52303 "ERF User ID Mapping"
         field(3; "Employee Name"; Text[250])
         {
             Caption = 'Employee Name';
-            DataClassification = CustomerContent;
-        }
-        field(4; "Used In"; Enum "ERF Used In")
-        {
-            Caption = 'Used In';
-            DataClassification = CustomerContent;
-        }
-        field(5; "Useful For"; Enum "ERF Useful For")
-        {
-            Caption = 'Useful For';
             DataClassification = CustomerContent;
         }
     }
