@@ -1,4 +1,4 @@
-tableextension 52302 "ERF User Setup" extends "User Setup"
+tableextension 52302 "ERF User Setup Ext" extends "User Setup"
 {
     fields
     {

@@ -1,4 +1,4 @@
-pageextension 52301 "ERF User Setup" extends "User Setup"
+pageextension 52301 "ERF User Setup Ext" extends "User Setup"
 {
     layout
     {
