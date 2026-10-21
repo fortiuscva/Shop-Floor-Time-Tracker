@@ -16,6 +16,12 @@ pageextension 52301 "ERF User Setup Ext" extends "User Setup"
                 ToolTip = 'Specifies the value of the Allow Modification of SFTT Entries field.', Comment = '%';
                 Visible = false;
             }
+            field("ERF Allow Manual Stop"; Rec."ERF Allow Manual Stop")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Allow Manual Stop Operation field.', Comment = '%';
+                Visible = false;
+            }
         }
 
     }
