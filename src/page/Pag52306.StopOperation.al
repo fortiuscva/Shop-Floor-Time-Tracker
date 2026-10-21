@@ -14,7 +14,6 @@ page 52306 "ERF Stop Operation"
                 {
                     ApplicationArea = All;
                     Caption = 'Output Quantity';
-                    BlankZero = true;
                     ShowCaption = true;
                     ShowMandatory = true;
                 }

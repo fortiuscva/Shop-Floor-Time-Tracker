@@ -12,5 +12,10 @@ tableextension 52302 "ERF User Setup Ext" extends "User Setup"
             Caption = 'Allow Modification of SFTT Entries';
             DataClassification = CustomerContent;
         }
+        field(52103; "ERF Allow Manual Stop"; Boolean)
+        {
+            Caption = 'Allow Manual Stop Operation';
+            DataClassification = CustomerContent;
+        }
     }
 }

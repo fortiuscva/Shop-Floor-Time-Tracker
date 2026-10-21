@@ -161,6 +161,10 @@ page 52301 "ERF SFTT Entries"
                 begin
                     Rec.TestField(Processed, false);
                     Rec.TestField(Rec.Status, Rec.Status::Finished);
+                    If UserSetup.Get(UserId) then
+                        if not UserSetup."ERF Allow Delete SFTT Entries" then
+                            Error('You do not have the necessary permissions to delete this Shop Floor Time Tracking Entry');
+
                     Rec.Delete(true);
                 end;
 
@@ -211,13 +215,22 @@ page 52301 "ERF SFTT Entries"
                 trigger OnAction()
                 var
                     StopOperation: Page "ERF Stop Operation";
+                    UserSetup: Record "User Setup";
                 begin
+                    Rec.TestField(Processed, false);
+                    Rec.TestField(Rec.Status, Rec.Status::"In Progress");
+                    If UserSetup.Get(UserId) then
+                        if not UserSetup."ERF Allow Manual Stop" then
+                            Error('You do not have the necessary permissions to stop the operation manually');
+
                     if StopOperation.RunModal() = Action::OK then begin
                         Rec.Validate("Output Quantity", StopOperation.GetOutputQuantity());
                         Rec.Validate("Serial No.", StopOperation.GetSerialNo());
                         Rec.Validate("End Time", CurrentDateTime);
                         Rec.Validate("Duration in Minutes", Round((Rec."End Time" - Rec."Start Time") / 60000, 1, '='));
                         Rec.Validate(Status, Rec.Status::Finished);
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
                     end;
                 end;
 
