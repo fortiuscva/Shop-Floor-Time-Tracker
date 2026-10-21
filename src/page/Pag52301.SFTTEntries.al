@@ -127,6 +127,7 @@ page 52301 "ERF SFTT Entries"
             {
                 ApplicationArea = All;
                 Caption = 'Create Output Journals';
+                Enabled = Rec.Status = Rec.Status::"Finished";
                 Ellipsis = true;
                 Image = OutputJournal;
                 Promoted = true;
@@ -150,6 +151,7 @@ page 52301 "ERF SFTT Entries"
             {
                 ApplicationArea = all;
                 Caption = 'Delete Entry';
+                Enabled = Rec.Status = Rec.Status::"Finished";
                 Image = Delete;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -167,6 +169,7 @@ page 52301 "ERF SFTT Entries"
             {
                 ApplicationArea = all;
                 Caption = 'Update Entry';
+                Enabled = Rec.Status = Rec.Status::"Finished";
                 Image = EditLines;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -196,6 +199,28 @@ page 52301 "ERF SFTT Entries"
                         CurrPage.Update(false);
                     end
                 end;
+            }
+            action(StopOperation)
+            {
+                ApplicationArea = all;
+                Caption = 'Stop Operation';
+                Enabled = Rec.Status = Rec.Status::"In Progress";
+                Image = Stop;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    StopOperation: Page "ERF Stop Operation";
+                begin
+                    if StopOperation.RunModal() = Action::OK then begin
+                        Rec.Validate("Output Quantity", StopOperation.GetOutputQuantity());
+                        Rec.Validate("Serial No.", StopOperation.GetSerialNo());
+                        Rec.Validate("End Time", CurrentDateTime);
+                        Rec.Validate("Duration in Minutes", Round((Rec."End Time" - Rec."Start Time") / 60000, 1, '='));
+                        Rec.Validate(Status, Rec.Status::Finished);
+                    end;
+                end;
+
             }
         }
         area(Navigation)
