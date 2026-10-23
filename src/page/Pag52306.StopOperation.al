@@ -14,15 +14,14 @@ page 52306 "ERF Stop Operation"
                 {
                     ApplicationArea = All;
                     Caption = 'Output Quantity';
+                    DecimalPlaces = 0 : 2;
                     ShowCaption = true;
-                    ShowMandatory = true;
                 }
                 field(SerialNo; SerialNo)
                 {
                     ApplicationArea = All;
                     Caption = 'Serial No.';
                     ShowCaption = true;
-                    ShowMandatory = true;
                 }
             }
         }
