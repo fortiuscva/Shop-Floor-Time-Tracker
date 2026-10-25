@@ -11,6 +11,7 @@ table 52303 "ERF User ID Mapping"
         {
             Caption = 'User ID';
             DataClassification = CustomerContent;
+            TableRelation = User."User Name";
         }
         field(2; "Employee No."; Code[20])
         {

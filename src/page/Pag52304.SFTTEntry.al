@@ -1,7 +1,7 @@
 page 52304 "ERF SFTT Entry"
 {
     ApplicationArea = All;
-    Caption = 'Shop Floor Time Tracking Entry';
+    Caption = 'Shop Floor Tracking';
     PageType = Card;
     InsertAllowed = false;
     ModifyAllowed = true;
@@ -42,6 +42,8 @@ page 52304 "ERF SFTT Entry"
                                 Error('Invalid line number in barcode.');
 
                             OperationNoVarGbl := CopyStr(Parts.Get(3), 1, 10);
+
+                            SFTTFunctions.PreventUsersFromScanningWorkCenter(ProdOrderNoVarGbl, LineNoVarGbl, OperationNoVarGbl);
 
                             if ProductionOrder.Get(ProductionOrder.Status::Released, ProdOrderNoVarGbl) then
                                 RPOItemDescription := ProductionOrder.Description;

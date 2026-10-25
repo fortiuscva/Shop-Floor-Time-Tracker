@@ -184,4 +184,26 @@ codeunit 52301 "ERF SFTT Functions"
             exit(ProdOrderRoutingLine."Routing No.");
     end;
 
+    procedure PreventUsersFromScanningWorkCenter(ProdOrderNo: Code[20]; RoutingRefNo: Integer; OperationNo: Code[10])
+    var
+        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+        WorkCenter: Record "Work Center";
+        RoutingNo: Code[20];
+        WorkCenterBlockedForScanErrLbl: Label 'You cannot start an operation for Work Center %1. This Work Center is not available for Shop Floor Time Tracking.';
+
+    begin
+        RoutingNo := GetRoutingNo(ProdOrderNo, RoutingRefNo, OperationNo);
+
+        ProdOrderRoutingLine.Reset();
+        ProdOrderRoutingLine.Get(ProdOrderRoutingLine.Status::Released, ProdOrderNo, RoutingRefNo, RoutingNo, OperationNo);
+
+        if ProdOrderRoutingLine.Type <> ProdOrderRoutingLine.Type::"Work Center" then
+            exit;
+        if not WorkCenter.Get(ProdOrderRoutingLine."No.") then
+            exit;
+
+        if WorkCenter."Blocked for Scan" then
+            Error(StrSubstNo(WorkCenterBlockedForScanErrLbl, WorkCenter."No."));
+    end;
+
 }
