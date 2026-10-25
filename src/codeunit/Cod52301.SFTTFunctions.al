@@ -189,7 +189,7 @@ codeunit 52301 "ERF SFTT Functions"
         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
         WorkCenter: Record "Work Center";
         RoutingNo: Code[20];
-        WorkCenterBlockedForScanErrLbl: Label 'You cannot start an operation for Work Center %1. This Work Center is not available for Shop Floor Time Tracking.';
+        WorkCenterBlockedForScanErrLbl: Label 'You cannot start an operation for Work Center %1 as this Work Center is blocked for Shop Floor Tracking.';
 
     begin
         RoutingNo := GetRoutingNo(ProdOrderNo, RoutingRefNo, OperationNo);
