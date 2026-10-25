@@ -11,7 +11,18 @@ table 52303 "ERF User ID Mapping"
         {
             Caption = 'User ID';
             DataClassification = CustomerContent;
-            TableRelation = User."User Name";
+            trigger OnLookup()
+            var
+                User: Record User;
+                Users: Page Users;
+            begin
+                Users.LookupMode(true);
+
+                if Users.RunModal() = Action::LookupOK then begin
+                    Users.GetRecord(User);
+                    Rec.Validate("User ID", User."User Name");
+                end;
+            end;
         }
         field(2; "Employee No."; Code[20])
         {
