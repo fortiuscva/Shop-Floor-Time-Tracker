@@ -136,24 +136,30 @@ page 52301 "ERF SFTT Entries"
                 var
                     SFTTSetup: Record "ERF SFTT Setup";
                     SFTTFunctions: Codeunit "ERF SFTT Functions";
-                    CreateOutputJournalConfirmQst: Label 'Do you want to create an Output Journal for this Shop Floor Time Tracking Entry?';
-                    OutputJournalSuccessfullyCreatedLbl: Label 'The Output Journal was created successfully for this Shop Floor Time Tracking Entry.';
+                    CreateOutputJournalConfirmQst: Label 'Do you want to create output journals for the selected shop floor time tracking entries?';
+                    OutputJournalSuccessfullyCreatedLbl: Label 'Output Journals was successfully created for the selected shop floor time tracking entries?';
                     SFTTEntry: Record "ERF SFTT Entry";
                     NoOfSelected: Integer;
                     NoOfSkipped: Integer;
+                    Window: Dialog;
                 begin
                     if Confirm(CreateOutputJournalConfirmQst, false) then begin
                         SFTTSetup.Get();
                         CurrPage.SetSelectionFilter(SFTTEntry);
                         NoOfSelected := SFTTEntry.Count;
-                        NoOfSkipped := NoOfSelected - SFTTEntry.Count;
                         SFTTEntry.Setrange(Status, SFTTEntry.Status::Finished);
                         SFTTEntry.SetRange(Processed, false);
-                        if SFTTEntry.FindSet() then
+                        NoOfSkipped := NoOfSelected - SFTTEntry.Count;
+                        // Window.Open('Selected #1, Skipped #2', NoOfSelected, NoOfSkipped);
+                        // Sleep(1000);
+                        if SFTTEntry.FindSet() then begin
                             repeat
                                 SFTTFunctions.CreateOutputJournal(SFTTEntry, SFTTSetup);
-                                Message(OutputJournalSuccessfullyCreatedLbl, Rec."Entry No.");
                             until SFTTEntry.Next = 0;
+                        end;
+                        // Sleep(1000);
+                        // Window.Close();
+                        Message(OutputJournalSuccessfullyCreatedLbl);
                     end;
                 end;
             }
