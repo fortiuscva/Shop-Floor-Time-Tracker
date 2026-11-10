@@ -139,17 +139,22 @@ page 52301 "ERF SFTT Entries"
                     CreateOutputJournalConfirmQst: Label 'Do you want to create an Output Journal for this Shop Floor Time Tracking Entry?';
                     OutputJournalSuccessfullyCreatedLbl: Label 'The Output Journal was created successfully for this Shop Floor Time Tracking Entry.';
                     SFTTEntry: Record "ERF SFTT Entry";
+                    NoOfSelected: Integer;
+                    NoOfSkipped: Integer;
                 begin
-                    CurrPage.SetSelectionFilter(SFTTEntry);
-                    if SFTTEntry.FindSet() then
-                        repeat
-                            if Confirm(CreateOutputJournalConfirmQst, false) then begin
-                                Rec.TestField(Rec.Status, Rec.Status::Finished);
-                                SFTTSetup.Get();
-                                SFTTFunctions.CreateOutputJournal(Rec, SFTTSetup);
+                    if Confirm(CreateOutputJournalConfirmQst, false) then begin
+                        SFTTSetup.Get();
+                        CurrPage.SetSelectionFilter(SFTTEntry);
+                        NoOfSelected := SFTTEntry.Count;
+                        NoOfSkipped := NoOfSelected - SFTTEntry.Count;
+                        SFTTEntry.Setrange(Status, SFTTEntry.Status::Finished);
+                        SFTTEntry.SetRange(Processed, false);
+                        if SFTTEntry.FindSet() then
+                            repeat
+                                SFTTFunctions.CreateOutputJournal(SFTTEntry, SFTTSetup);
                                 Message(OutputJournalSuccessfullyCreatedLbl, Rec."Entry No.");
-                            end;
-                        until Rec.Next = 0;
+                            until SFTTEntry.Next = 0;
+                    end;
                 end;
             }
             action(DeleteEntry)
